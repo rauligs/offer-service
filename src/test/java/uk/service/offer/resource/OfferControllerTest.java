@@ -11,7 +11,9 @@ import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
 
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -38,5 +40,14 @@ public class OfferControllerTest {
 
         this.mockMvc.perform(post("/offers")).andDo(print()).andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/offers/1"));
+    }
+
+    @Test
+    public void getAnOffer_shouldReturnOk() throws Exception {
+
+        this.mockMvc.perform(get("/offers/1")).andDo(print())
+                .andExpect(status().isOk());
+
+        verifyZeroInteractions(mockOfferRepository);
     }
 }

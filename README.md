@@ -14,6 +14,7 @@ has expired users may cancel it.
 * RESTful [Spring](https://docs.spring.io/spring/docs/5.0.5.RELEASE/spring-framework-reference) base application
 (conveniently using [Spring Boot](https://projects.spring.io/spring-boot/))
 * Testing and validating REST services in Java with [Rest Assured](http://rest-assured.io/) in favour of traditional RestTemplate (simple + nice dsl)
+* JPA - Hibernate with an embedded database (H2)
 
 ## Building and Assemble
 
@@ -34,4 +35,5 @@ The API is RESTful and content will be in JSON
 
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
-| `/offers`     |   POST   | returns response with Location header of the entity created (can't be fetched) |
+| `/offers`     |   POST   | returns response with status 201 (CREATED) and Location header of the entity created (can't be fetched) |
+| `/offers/{id}`|   GET    | returns response with status OK  |
