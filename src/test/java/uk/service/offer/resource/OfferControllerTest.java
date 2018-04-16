@@ -7,6 +7,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import uk.service.offer.Application;
 
+import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.core.Is.is;
 
@@ -19,12 +20,17 @@ public class OfferControllerTest {
     private int port;
 
     @Test
-    public void shouldSayHi() {
+    public void createAnOffer_shouldSucceed_andReturnExpectedLocationHeader() {
 
-        when()
-            .get(String.format("http://localhost:%s/hi", port))
+        String anOffer = "{\"description\":\"you should buy this cheap thing\"}";
+
+        given()
+            .port(port)
+            .header("Content-Type", "application/json")
+            .body(anOffer)
+            .post("/offers")
         .then()
-            .statusCode(is(200))
-            .body(is("Hi there!"));
+            .statusCode(is(201))
+            .header("Location", is(String.format("http://localhost:%s/offers/1", port)));
     }
 }

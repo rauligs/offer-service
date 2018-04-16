@@ -34,4 +34,4 @@ The API is RESTful and content will be in JSON
 
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
-| `/hi`         |   GET    |returns a 'Hi There!'             |
+| `/offers`     |   POST   | returns response with fake Location header. It does not create an offer yet            |
