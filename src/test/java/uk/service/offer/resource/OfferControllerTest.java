@@ -10,12 +10,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,16 +38,36 @@ public class OfferControllerTest {
         when(mockOfferRepository.save(argThat(offer -> offer.getId() == null)))
                 .thenReturn(savedOffer);
 
-        this.mockMvc.perform(post("/offers")).andDo(print()).andExpect(status().isCreated())
+        this.mockMvc.perform(post("/offers"))
+                .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/offers/1"));
     }
 
     @Test
     public void getAnOffer_shouldReturnOk() throws Exception {
 
-        this.mockMvc.perform(get("/offers/1")).andDo(print())
-                .andExpect(status().isOk());
+        long id = 123L;
+        Offer existingOffer = new Offer();
+        existingOffer.setId(id);
 
-        verifyZeroInteractions(mockOfferRepository);
+        when(mockOfferRepository.findById(id))
+                .thenReturn(Optional.of(existingOffer));
+
+        this.mockMvc.perform(get("/offers/123"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void getAnOffer_shouldReturnNotFound() throws Exception {
+
+        long id = 321L;
+        Offer nonExistingOffer = new Offer();
+        nonExistingOffer.setId(id);
+
+        when(mockOfferRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        this.mockMvc.perform(get("/offers/123"))
+                .andExpect(status().isNotFound());
     }
 }

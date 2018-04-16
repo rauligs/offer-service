@@ -32,6 +32,8 @@ public class OfferController {
 
     @RequestMapping(value = "/offers/{id}", method = RequestMethod.GET)
     public ResponseEntity getOffer(@PathVariable long id) {
-        return ResponseEntity.ok().build();
+        return offerRepository.findById(id)
+                .map(offer -> ResponseEntity.ok().build())
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

@@ -53,4 +53,17 @@ public class OfferControllerIntegrationTest {
             .then()
                 .statusCode(is(200));
     }
+
+    @Test
+    public void retrieveOffer_shouldFailAsNotFound_whenAnOfferDoesNotExist() {
+
+        long nonExistingOfferId = 999;
+
+        given()
+                .port(port)
+                .header("Accept", "application/json")
+                .get("/offers/" + nonExistingOfferId)
+            .then()
+                .statusCode(is(404));
+    }
 }

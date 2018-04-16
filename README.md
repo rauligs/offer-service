@@ -36,4 +36,4 @@ The API is RESTful and content will be in JSON
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
 | `/offers`     |   POST   | returns response with status 201 (CREATED) and Location header of the entity created (can't be fetched) |
-| `/offers/{id}`|   GET    | returns response with status OK  |
+| `/offers/{id}`|   GET    | returns response with status 200 (OK)  if the offer exists, otherwise 404 (NOT FOUND)|
