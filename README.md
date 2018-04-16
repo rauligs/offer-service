@@ -34,4 +34,4 @@ The API is RESTful and content will be in JSON
 
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
-| `/offers`     |   POST   | returns response with fake Location header. It does not create an offer yet            |
+| `/offers`     |   POST   | returns response with Location header of the entity created (can't be fetched) |

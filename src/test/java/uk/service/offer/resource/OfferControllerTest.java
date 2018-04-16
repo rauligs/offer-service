@@ -2,35 +2,41 @@ package uk.service.offer.resource;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-import uk.service.offer.Application;
+import org.springframework.test.web.servlet.MockMvc;
+import uk.service.offer.persistence.dao.OfferRepository;
+import uk.service.offer.persistence.model.Offer;
 
-import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
-import static org.hamcrest.core.Is.is;
-
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WebMvcTest(OfferController.class)
 public class OfferControllerTest {
 
-    @LocalServerPort
-    private int port;
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private OfferRepository mockOfferRepository;
 
     @Test
-    public void createAnOffer_shouldSucceed_andReturnExpectedLocationHeader() {
+    public void createAnOffer_shouldSaveANewOffer_returningExpectedLocation() throws Exception {
 
-        String anOffer = "{\"description\":\"you should buy this cheap thing\"}";
+        Offer savedOffer = new Offer();
+        savedOffer.setId(1);
 
-        given()
-            .port(port)
-            .header("Content-Type", "application/json")
-            .body(anOffer)
-            .post("/offers")
-        .then()
-            .statusCode(is(201))
-            .header("Location", is(String.format("http://localhost:%s/offers/1", port)));
+        when(mockOfferRepository.save(argThat(offer -> offer.getId() == null)))
+                .thenReturn(savedOffer);
+
+        this.mockMvc.perform(post("/offers")).andDo(print()).andExpect(status().isCreated())
+                .andExpect(header().string("Location", "http://localhost/offers/1"));
     }
 }
