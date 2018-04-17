@@ -5,15 +5,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBodyReturnValueHandler;
-import uk.service.offer.persistence.dao.OfferRepository;
+import uk.service.offer.exception.OfferNotFoundException;
 import uk.service.offer.persistence.model.Offer;
+import uk.service.offer.service.OfferService;
 
-import java.util.Optional;
-
-import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -30,18 +28,18 @@ public class OfferControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private OfferRepository mockOfferRepository;
+    private OfferService mockOfferService;
 
     @Test
     public void createAnOffer_shouldSaveANewOffer_returningExpectedLocation() throws Exception {
 
-        Offer savedOffer = new Offer();
-        savedOffer.setId(1);
+        Long savedOfferId = 1L;
+        when(mockOfferService.create(argThat(offer -> offer.getId() == null)))
+                .thenReturn(savedOfferId);
 
-        when(mockOfferRepository.save(argThat(offer -> offer.getId() == null)))
-                .thenReturn(savedOffer);
-
-        this.mockMvc.perform(post("/offers"))
+        this.mockMvc.perform(post("/offers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"description\":\"wow\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/offers/1"));
     }
@@ -54,8 +52,8 @@ public class OfferControllerTest {
         existingOffer.setId(id);
         existingOffer.setDescription("My description");
 
-        when(mockOfferRepository.findById(id))
-                .thenReturn(Optional.of(existingOffer));
+        when(mockOfferService.getOfferById(id))
+                .thenReturn(existingOffer);
 
         this.mockMvc.perform(get("/offers/123"))
                 .andExpect(status().isOk())
@@ -65,14 +63,12 @@ public class OfferControllerTest {
     @Test
     public void getAnOffer_shouldReturnNotFound() throws Exception {
 
-        long id = 321L;
-        Offer nonExistingOffer = new Offer();
-        nonExistingOffer.setId(id);
+        long nonFoundOfferId = 321L;
 
-        when(mockOfferRepository.findById(id))
-                .thenReturn(Optional.empty());
+        when(mockOfferService.getOfferById(nonFoundOfferId))
+                .thenThrow(new OfferNotFoundException());
 
-        this.mockMvc.perform(get("/offers/123"))
+        this.mockMvc.perform(get("/offers/" + nonFoundOfferId))
                 .andExpect(status().isNotFound());
     }
 }
