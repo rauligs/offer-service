@@ -11,12 +11,11 @@ public class OfferDTO {
     private final String description;
     private final String currency;
     private final long amountInPence;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private final Date startDate;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
     private final Date endDate;
+    private String status;
 
     @JsonCreator
     public OfferDTO(@JsonProperty("description") String description,
@@ -29,6 +28,10 @@ public class OfferDTO {
         this.amountInPence = amountInPence;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDescription() {
@@ -49,5 +52,9 @@ public class OfferDTO {
 
     public Date getEndDate() {
         return endDate;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }

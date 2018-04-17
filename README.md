@@ -41,6 +41,7 @@ The API is RESTful and content will be in JSON
 ** *amountInPence:* Amount in pence of the given currency
 ** *startDate:* Start date of the offer
 ** *endDate:* End date of the offer
+** *status:* Current status of the offer. Values for now only: CREATED
 
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
@@ -68,8 +69,8 @@ The API is RESTful and content will be in JSON
  "currency":"GBP",
  "amountInPence":12345,
  "startDate":"2018-04-1 22:10",
- "endDate":"2018-05-1 22:10"
-
+ "endDate":"2018-05-1 22:10",
+ "status":"CREATED"
 }
 ```
 

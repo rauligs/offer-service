@@ -70,7 +70,8 @@ public class OfferControllerIntegrationTest {
                 .body("currency", is("GBP"))
                 .body("amountInPence", is(12345))
                 .body("startDate", is("2100-04-17 06:24"))
-                .body("endDate", is("2110-04-18 06:24"));
+                .body("endDate", is("2110-04-18 06:24"))
+                .body("status", is("CREATED"));
     }
 
     @Test

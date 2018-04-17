@@ -3,6 +3,7 @@ package uk.service.offer.persistence.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.PostLoad;
 import java.util.Date;
 import java.util.Objects;
 
@@ -17,6 +18,7 @@ public class Offer {
     private long amountInPence;
     private Date startDate;
     private Date endDate;
+    private String status;
 
     public Offer() {
         // JPA required
@@ -54,6 +56,10 @@ public class Offer {
         return endDate;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -63,11 +69,18 @@ public class Offer {
                 Objects.equals(description, offer.description) &&
                 Objects.equals(currency, offer.currency) &&
                 Objects.equals(startDate, offer.startDate) &&
-                Objects.equals(endDate, offer.endDate);
+                Objects.equals(endDate, offer.endDate) &&
+                Objects.equals(status, offer.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, currency, amountInPence, startDate, endDate);
+
+        return Objects.hash(description, currency, amountInPence, startDate, endDate, status);
+    }
+
+    @PostLoad
+    void onPostLoad() {
+        this.status = "CREATED";
     }
 }

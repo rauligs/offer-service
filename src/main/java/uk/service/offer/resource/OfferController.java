@@ -34,6 +34,8 @@ public class OfferController {
     @RequestMapping(value = "/offers/{id}", method = RequestMethod.GET)
     public ResponseEntity getOffer(@PathVariable long id) {
         Offer offer = offerService.getOfferById(id);
-        return ResponseEntity.ok(new OfferDTO(offer.getDescription(), offer.getCurrency(), offer.getAmountInPence(), offer.getStartDate(), offer.getEndDate()));
+        OfferDTO responseDTO = new OfferDTO(offer.getDescription(), offer.getCurrency(), offer.getAmountInPence(), offer.getStartDate(), offer.getEndDate());
+        responseDTO.setStatus(offer.getStatus());
+        return ResponseEntity.ok(responseDTO);
     }
 }
