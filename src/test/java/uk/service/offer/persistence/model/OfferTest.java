@@ -30,6 +30,18 @@ public class OfferTest {
     }
 
     @Test
+    public void onPostLoad_shouldSetStatusAs_CANCELLED_whenOfferIsCancelled() {
+
+        Offer offer = OfferFixture.aValidOffer()
+                .cancelled()
+                .build();
+
+        assertThat(offer.getStatus(), is(nullValue()));
+        offer.onPostLoad();
+        assertThat(offer.getStatus(), is("CANCELLED"));
+    }
+
+    @Test
     public void cancel_shouldSetOfferAsCancelled() {
 
         Offer offer = OfferFixture.aValidOffer().build();
@@ -39,5 +51,6 @@ public class OfferTest {
         offer.cancel();
 
         assertThat(offer.isCancelled(), is(true));
+
     }
 }

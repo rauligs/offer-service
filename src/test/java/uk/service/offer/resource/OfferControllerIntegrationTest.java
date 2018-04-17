@@ -12,6 +12,7 @@ import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static uk.service.offer.fixture.OfferFixture.aValidOffer;
 
@@ -100,7 +101,7 @@ public class OfferControllerIntegrationTest {
         Offer existingSavedOffer = offerRepository.save(aValidOffer()
                 .withDescription("Greatest offer")
                 .withStartDate("2018-04-15T06:24:00Z")
-                .withEndDate("2018-04-16T06:24:00Z").build());
+                .withEndDate("2100-04-16T06:24:00Z").build());
 
         given()
                 .port(port)
@@ -118,6 +119,21 @@ public class OfferControllerIntegrationTest {
                 .post("/offers/555/cancel")
                 .then()
                 .statusCode(is(404));
+    }
+
+    @Test
+    public void cancelOffer_shouldReturnConflict_whenOfferIsExpired() {
+
+        Offer expiredOffer = offerRepository.save(aValidOffer()
+                .withDescription("Greatest offer")
+                .withStartDate("2017-04-15T06:24:00Z")
+                .withEndDate("2017-04-16T06:24:00Z").build());
+
+        given()
+                .port(port)
+                .post("/offers/" + expiredOffer.getId() + "/cancel")
+                .then()
+                .statusCode(is(409));
     }
 
     @Test

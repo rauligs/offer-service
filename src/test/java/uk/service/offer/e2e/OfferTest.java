@@ -32,7 +32,7 @@ public class OfferTest {
                 "\"currency\":\"GBP\"," +
                 "\"amountInPence\":100000," +
                 "\"startDate\":\"2018-04-01T06:24:00Z\"," +
-                "\"endDate\":\"2018-04-18T06:24:00Z\"" +
+                "\"endDate\":\"2050-04-18T06:24:00Z\"" +
                 "}";
 
         given()
@@ -54,7 +54,7 @@ public class OfferTest {
             .body("currency", is("GBP"))
             .body("amountInPence", is(100000))
             .body("startDate", is("2018-04-01T06:24:00Z"))
-            .body("endDate", is("2018-04-18T06:24:00Z"))
+            .body("endDate", is("2050-04-18T06:24:00Z"))
             .body("status", is("CREATED"));
     }
 
@@ -66,7 +66,7 @@ public class OfferTest {
                 "\"currency\":\"GBP\"," +
                 "\"amountInPence\":100000," +
                 "\"startDate\":\"2018-04-01T06:24:00Z\"," +
-                "\"endDate\":\"2018-04-18T06:24:00Z\"" +
+                "\"endDate\":\"2050-04-18T06:24:00Z\"" +
                 "}";
 
         given()
@@ -94,7 +94,7 @@ public class OfferTest {
                 .body("currency", is("GBP"))
                 .body("amountInPence", is(100000))
                 .body("startDate", is("2018-04-01T06:24:00Z"))
-                .body("endDate", is("2018-04-18T06:24:00Z"))
+                .body("endDate", is("2050-04-18T06:24:00Z"))
                 .body("status", is("CANCELLED"));
     }
 }

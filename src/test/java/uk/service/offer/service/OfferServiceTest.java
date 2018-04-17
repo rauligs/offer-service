@@ -7,6 +7,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
+import uk.service.offer.exception.InvalidOfferStateException;
 import uk.service.offer.exception.OfferNotFoundException;
 import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
@@ -80,10 +81,10 @@ public class OfferServiceTest {
     }
 
     @Test
-    public void cancelOffer_shouldCancel() {
+    public void cancelOffer_shouldSucceed() {
 
-        Offer existingOffer = mock(Offer.class);
         long id = 321L;
+        Offer existingOffer = mock(Offer.class);
 
         when(mockOfferRepository.findById(id))
                 .thenReturn(Optional.of(existingOffer));
@@ -91,5 +92,20 @@ public class OfferServiceTest {
         offerService.cancelOffer(id);
 
        verify(existingOffer).cancel();
+    }
+
+    @Test(expected = InvalidOfferStateException.class)
+    public void cancelOffer_shouldFail_whenOfferIsExpired() {
+
+        long id = 321L;
+        Offer existingExpiredOffer = mock(Offer.class);
+
+        when(mockOfferRepository.findById(id))
+                .thenReturn(Optional.of(existingExpiredOffer));
+
+        when(existingExpiredOffer.getStatus())
+                .thenReturn("EXPIRED");
+
+        offerService.cancelOffer(id);
     }
 }

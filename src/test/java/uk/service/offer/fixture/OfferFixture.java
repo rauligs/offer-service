@@ -23,6 +23,7 @@ public class OfferFixture {
     private long amountInPence = 12345L;
     private Instant startDate = Instant.now().plus(1, ChronoUnit.DAYS);
     private Instant endDate = Instant.now().plus(2, ChronoUnit.DAYS);
+    private boolean cancel = false;
 
     public static OfferFixture aValidOffer() {
         return new OfferFixture();
@@ -63,7 +64,14 @@ public class OfferFixture {
         return this;
     }
 
+    public OfferFixture cancelled() {
+        this.cancel = true;
+        return this;
+    }
+
     public Offer build() {
-        return new Offer(description, currency, amountInPence, startDate, endDate);
+        Offer offer = new Offer(description, currency, amountInPence, startDate, endDate);
+        offer.setCancelled(this.cancel);
+        return offer;
     }
 }

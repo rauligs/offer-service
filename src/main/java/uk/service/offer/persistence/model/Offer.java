@@ -79,6 +79,7 @@ public class Offer {
         if (!(o instanceof Offer)) return false;
         Offer offer = (Offer) o;
         return amountInPence == offer.amountInPence &&
+                isCancelled == offer.isCancelled &&
                 Objects.equals(description, offer.description) &&
                 Objects.equals(currency, offer.currency) &&
                 Objects.equals(startDate, offer.startDate) &&
@@ -89,7 +90,7 @@ public class Offer {
     @Override
     public int hashCode() {
 
-        return Objects.hash(description, currency, amountInPence, startDate, endDate, status);
+        return Objects.hash(description, currency, amountInPence, startDate, endDate, status, isCancelled);
     }
 
     @PostLoad

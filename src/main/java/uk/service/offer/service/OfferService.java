@@ -2,6 +2,7 @@ package uk.service.offer.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import uk.service.offer.exception.InvalidOfferStateException;
 import uk.service.offer.exception.OfferNotFoundException;
 import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
@@ -27,6 +28,9 @@ public class OfferService {
     @Transactional
     public void cancelOffer(long offerId) {
         Offer offer = getOfferById(offerId);
+        if("EXPIRED".equals(offer.getStatus())) {
+            throw new InvalidOfferStateException();
+        }
         offer.cancel();
     }
 }
