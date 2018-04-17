@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.PostLoad;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -16,15 +16,15 @@ public class Offer {
     private String description;
     private String currency;
     private long amountInPence;
-    private Date startDate;
-    private Date endDate;
+    private Instant startDate;
+    private Instant endDate;
     private String status;
 
     public Offer() {
         // JPA required
     }
 
-    public Offer(String description, String currency, long amountInPence, Date startDate, Date endDate) {
+    public Offer(String description, String currency, long amountInPence, Instant startDate, Instant endDate) {
         this.description = description;
         this.currency = currency;
         this.amountInPence = amountInPence;
@@ -48,11 +48,11 @@ public class Offer {
         return amountInPence;
     }
 
-    public Date getStartDate() {
+    public Instant getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public Instant getEndDate() {
         return endDate;
     }
 
@@ -81,6 +81,10 @@ public class Offer {
 
     @PostLoad
     void onPostLoad() {
-        this.status = "CREATED";
+        if (Instant.now().isAfter(this.endDate)) {
+            this.status = "EXPIRED";
+        } else {
+            this.status = "CREATED";
+        }
     }
 }

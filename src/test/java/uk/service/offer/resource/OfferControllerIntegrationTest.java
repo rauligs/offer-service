@@ -11,9 +11,6 @@ import uk.service.offer.Application;
 import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
 
-import java.time.Instant;
-import java.util.Date;
-
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.core.Is.is;
 import static uk.service.offer.fixture.OfferFixture.aValidOffer;
@@ -37,8 +34,8 @@ public class OfferControllerIntegrationTest {
                 "\"description\":\"you should buy this cheap thing\"," +
                 "\"currency\":\"GBP\"," +
                 "\"amountInPence\":100000," +
-                "\"startDate\":\"2018-04-01 06:24\"," +
-                "\"endDate\":\"2018-04-18 06:24\"" +
+                "\"startDate\":\"2018-04-01T06:24:00Z\"," +
+                "\"endDate\":\"2018-04-18T06:24:00Z\"" +
                 "}";
 
         given()
@@ -55,8 +52,8 @@ public class OfferControllerIntegrationTest {
     public void retrieveOffer_shouldSucceed_whenAnOfferExists_withTheGivenId() {
 
         Offer offer = aValidOffer().withDescription("Greatest offer")
-                .withStartDate(Date.from(Instant.parse("2100-04-17T06:24:57Z")))
-                .withEndDate(Date.from(Instant.parse("2110-04-18T06:24:57Z"))).build();
+                .withStartDate("2100-04-17T06:24:57Z")
+                .withEndDate("2110-04-17T06:24:57Z").build();
 
         Offer existingSavedOffer = offerRepository.save(offer);
 
@@ -69,9 +66,32 @@ public class OfferControllerIntegrationTest {
                 .body("description", is("Greatest offer"))
                 .body("currency", is("GBP"))
                 .body("amountInPence", is(12345))
-                .body("startDate", is("2100-04-17 06:24"))
-                .body("endDate", is("2110-04-18 06:24"))
+                .body("startDate", is("2100-04-17T06:24:57Z"))
+                .body("endDate", is("2110-04-17T06:24:57Z"))
                 .body("status", is("CREATED"));
+    }
+
+    @Test
+    public void retrieveOffer_shouldBeExpired_whenAnOfferExists_withTheGivenId_butEndDateIsInThePast() {
+
+        Offer offer = aValidOffer().withDescription("Greatest offer")
+                .withStartDate("2018-04-15T06:24:00Z")
+                .withEndDate("2018-04-16T06:24:00Z").build();
+
+        Offer existingSavedOffer = offerRepository.save(offer);
+
+        given()
+                .port(port)
+                .header("Accept", "application/json")
+                .get("/offers/" + existingSavedOffer.getId())
+            .then()
+                .statusCode(is(200))
+                .body("description", is("Greatest offer"))
+                .body("currency", is("GBP"))
+                .body("amountInPence", is(12345))
+                .body("startDate", is("2018-04-15T06:24:00Z"))
+                .body("endDate", is("2018-04-16T06:24:00Z"))
+                .body("status", is("EXPIRED"));
     }
 
     @Test

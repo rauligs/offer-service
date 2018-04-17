@@ -64,8 +64,8 @@ public class OfferControllerTest {
                 .withDescription("My description")
                 .withCurrency("GBP")
                 .withAmountInPence(1L)
-                .withStartDate(Date.from(Instant.parse("2018-04-01T06:24:00Z")))
-                .withEndDate(Date.from(Instant.parse("2018-04-18T06:24:55Z")))
+                .withStartDate("2018-04-01T06:24:00Z")
+                .withEndDate("2018-04-18T06:24:55Z")
                 .build();
 
         when(mockOfferService.getOfferById(id))
@@ -77,8 +77,8 @@ public class OfferControllerTest {
                         "\"description\":\"My description\"," +
                         "\"currency\":\"GBP\"," +
                         "\"amountInPence\":1," +
-                        "\"startDate\":\"2018-04-01 06:24\"," +
-                        "\"endDate\":\"2018-04-18 06:24\"" +
+                        "\"startDate\":\"2018-04-01T06:24:00Z\"," +
+                        "\"endDate\":\"2018-04-18T06:24:55Z\"" +
                         "}"));
     }
 

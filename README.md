@@ -41,7 +41,9 @@ The API is RESTful and content will be in JSON
 ** *amountInPence:* Amount in pence of the given currency
 ** *startDate:* Start date of the offer
 ** *endDate:* End date of the offer
-** *status:* Current status of the offer. Values for now only: CREATED
+** *status:* Current status of the offer. Possible values are:
+*** CREATED: Offer has been created (endDate > now)
+*** EXPIRED: Offer has expired (endDate < now)
 
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
@@ -75,4 +77,4 @@ The API is RESTful and content will be in JSON
 ```
 
 ### Date formatting
-_Date format is 'yyyy-MM-dd HH:mm' in UTC_
+_Date format is 'yyyy-MM-ddTHH:mm:00Z' in UTC_

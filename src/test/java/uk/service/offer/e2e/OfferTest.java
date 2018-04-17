@@ -31,8 +31,8 @@ public class OfferTest {
                 "\"description\":\"you should buy this cheap thing\"," +
                 "\"currency\":\"GBP\"," +
                 "\"amountInPence\":100000," +
-                "\"startDate\":\"2018-04-01 06:24\"," +
-                "\"endDate\":\"2018-04-18 06:24\"" +
+                "\"startDate\":\"2018-04-01T06:24:00Z\"," +
+                "\"endDate\":\"2018-04-18T06:24:00Z\"" +
                 "}";
 
         given()
@@ -53,7 +53,7 @@ public class OfferTest {
             .body("description", is("you should buy this cheap thing"))
             .body("currency", is("GBP"))
             .body("amountInPence", is(100000))
-            .body("startDate", is("2018-04-01 06:24"))
-            .body("endDate", is("2018-04-18 06:24"));
+            .body("startDate", is("2018-04-01T06:24:00Z"))
+            .body("endDate", is("2018-04-18T06:24:00Z"));
     }
 }
