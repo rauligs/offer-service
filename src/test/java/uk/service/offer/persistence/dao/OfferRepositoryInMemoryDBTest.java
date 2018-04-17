@@ -13,6 +13,7 @@ import uk.service.offer.persistence.model.Offer;
 import javax.annotation.Resource;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -36,7 +37,8 @@ public class OfferRepositoryInMemoryDBTest {
     @Test
     public void saveOffer_whenIsSaved_itShouldBeFound() {
 
-        Offer offer = new Offer();
+        Offer offer = new Offer("Description", "GBP", 123L);
+
         Offer savedOffer = offerRepository.save(offer);
 
         // Note: I don't consider a very good practice using the same
@@ -47,6 +49,8 @@ public class OfferRepositoryInMemoryDBTest {
         Optional<Offer> foundOffer = offerRepository.findById(savedOffer.getId());
 
         assertThat(foundOffer.isPresent(), is(true));
+        assertThat(foundOffer.get(), is(savedOffer));
+        assertThat(foundOffer.get().getId(), is(notNullValue()));
         assertThat(foundOffer.get().getId(), is(savedOffer.getId()));
     }
 

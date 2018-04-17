@@ -29,7 +29,11 @@ public class OfferControllerIntegrationTest {
     @Test
     public void createAnOffer_shouldSucceed_andReturnExpectedLocationHeader() {
 
-        String anOffer = "{\"description\":\"you should buy this cheap thing\"}";
+        String anOffer = "{" +
+                "\"description\":\"you should buy this cheap thing\"," +
+                "\"currency\":\"GBP\"," +
+                "\"amountInPence\":100000" +
+                "}";
 
         given()
             .port(port)
@@ -44,8 +48,7 @@ public class OfferControllerIntegrationTest {
     @Test
     public void retrieveOffer_shouldSucceed_whenAnOfferExists_withTheGivenId() {
 
-        Offer offer = new Offer();
-        offer.setDescription("Greatest offer");
+        Offer offer = new Offer("Greatest offer", "GBP", 12345L);
         Offer existingSavedOffer = offerRepository.save(offer);
 
         given()
@@ -54,7 +57,9 @@ public class OfferControllerIntegrationTest {
                 .get("/offers/" + existingSavedOffer.getId())
             .then()
                 .statusCode(is(200))
-                .body("description", is("Greatest offer"));
+                .body("description", is("Greatest offer"))
+                .body("currency", is("GBP"))
+                .body("amountInPence", is(12345));
     }
 
     @Test

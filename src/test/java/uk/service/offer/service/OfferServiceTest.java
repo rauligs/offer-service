@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.fail;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -38,13 +38,11 @@ public class OfferServiceTest {
     @Test
     public void createAnOffer_shouldSaveANewOffer_returningExpectedLocation() {
 
-        Offer offerToCreate = new Offer();
-        offerToCreate.setDescription("Interesting offer");
+        Offer offerToCreate = new Offer("Interesting offer", "GBP", 66L);
+        Long savedOfferId = 456L;
 
-        Offer savedOffer = new Offer();
-        long savedOfferId = 1L;
-        savedOffer.setDescription("Interesting offer");
-        savedOffer.setId(savedOfferId);
+        Offer savedOffer = mock(Offer.class);
+        when(savedOffer.getId()).thenReturn(savedOfferId);
 
         when(mockOfferRepository.save(offerToCreate))
                 .thenReturn(savedOffer);
@@ -58,9 +56,7 @@ public class OfferServiceTest {
     public void getAnOffer_shouldReturnOk() {
 
         long id = 123L;
-        Offer existingOffer = new Offer();
-        existingOffer.setId(id);
-        existingOffer.setDescription("My description");
+        Offer existingOffer = new Offer("My description", "GBP", 99L);
 
         when(mockOfferRepository.findById(id))
                 .thenReturn(Optional.of(existingOffer));
@@ -74,8 +70,6 @@ public class OfferServiceTest {
     public void getAnOffer_shouldThrowException_whenNotFound() {
 
         long id = 321L;
-        Offer nonExistingOffer = new Offer();
-        nonExistingOffer.setId(id);
 
         when(mockOfferRepository.findById(id))
                 .thenReturn(Optional.empty());

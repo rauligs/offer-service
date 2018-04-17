@@ -34,30 +34,40 @@ public class OfferControllerTest {
     public void createAnOffer_shouldSaveANewOffer_returningExpectedLocation() throws Exception {
 
         Long savedOfferId = 1L;
-        when(mockOfferService.create(argThat(offer -> offer.getId() == null)))
+        when(mockOfferService.create(argThat(offer ->
+                    offer.getId() == null &&
+                    "wow".equals(offer.getDescription()) &&
+                    "GBP".equals(offer.getCurrency()) &&
+                    offer.getAmountInPence() == 12345L)))
                 .thenReturn(savedOfferId);
 
         this.mockMvc.perform(post("/offers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"description\":\"wow\"}"))
+                .content("{" +
+                        "\"description\":\"wow\"," +
+                        "\"currency\":\"GBP\"," +
+                        "\"amountInPence\":12345" +
+                        "}"))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "http://localhost/offers/1"));
     }
 
     @Test
-    public void getAnOffer_shouldReturnOk() throws Exception {
+    public void getAnOffer_shouldReturnOk_withContentSetInOffer() throws Exception {
 
         long id = 123L;
-        Offer existingOffer = new Offer();
-        existingOffer.setId(id);
-        existingOffer.setDescription("My description");
+        Offer existingOffer = new Offer("My description", "GBP", 1L);
 
         when(mockOfferService.getOfferById(id))
                 .thenReturn(existingOffer);
 
         this.mockMvc.perform(get("/offers/123"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{\"description\":\"My description\"}"));
+                .andExpect(content().json("{" +
+                        "\"description\":\"My description\"," +
+                        "\"currency\":\"GBP\"," +
+                        "\"amountInPence\":1" +
+                        "}"));
     }
 
     @Test
