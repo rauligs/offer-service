@@ -54,6 +54,47 @@ public class OfferTest {
             .body("currency", is("GBP"))
             .body("amountInPence", is(100000))
             .body("startDate", is("2018-04-01T06:24:00Z"))
-            .body("endDate", is("2018-04-18T06:24:00Z"));
+            .body("endDate", is("2018-04-18T06:24:00Z"))
+            .body("status", is("CREATED"));
+    }
+
+    @Test
+    public void cancel_aCancelledOffer_shouldSucceed() {
+
+        String anOffer = "{" +
+                "\"description\":\"you should buy this cheap thing\"," +
+                "\"currency\":\"GBP\"," +
+                "\"amountInPence\":100000," +
+                "\"startDate\":\"2018-04-01T06:24:00Z\"," +
+                "\"endDate\":\"2018-04-18T06:24:00Z\"" +
+                "}";
+
+        given()
+                .port(port)
+                .header("Content-Type", "application/json")
+                .body(anOffer)
+                .post("/offers")
+                .then()
+                .statusCode(is(201))
+                .header("Location", is(String.format("http://localhost:%s/offers/1", port)));
+
+        given()
+                .port(port)
+                .post("/offers/1/cancel")
+                .then()
+                .statusCode(is(200));
+
+        given()
+                .port(port)
+                .header("Accept", "application/json")
+                .get("/offers/1")
+                .then()
+                .statusCode(is(200))
+                .body("description", is("you should buy this cheap thing"))
+                .body("currency", is("GBP"))
+                .body("amountInPence", is(100000))
+                .body("startDate", is("2018-04-01T06:24:00Z"))
+                .body("endDate", is("2018-04-18T06:24:00Z"))
+                .body("status", is("CANCELLED"));
     }
 }

@@ -12,10 +12,8 @@ import uk.service.offer.exception.OfferNotFoundException;
 import uk.service.offer.persistence.model.Offer;
 import uk.service.offer.service.OfferService;
 
-import java.time.Instant;
-import java.util.Date;
-
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -80,6 +78,15 @@ public class OfferControllerTest {
                         "\"startDate\":\"2018-04-01T06:24:00Z\"," +
                         "\"endDate\":\"2018-04-18T06:24:55Z\"" +
                         "}"));
+    }
+
+    @Test
+    public void cancelOffer_shouldCallOfferRepository_withTheGivenId() throws Exception {
+
+        this.mockMvc.perform(post("/offers/123/cancel"))
+                .andExpect(status().isOk());
+
+        verify(mockOfferService).cancelOffer(123L);
     }
 
     @Test

@@ -45,10 +45,11 @@ The API is RESTful and content will be in JSON
 *** CREATED: Offer has been created (endDate > now)
 *** EXPIRED: Offer has expired (endDate < now)
 
-| resource      | method   |description                       |
-|:--------------|:---------|:---------------------------------|
-| `/offers`     |   POST   | returns response with status 201 (CREATED) and Location header of the entity created (can't be fetched) |
-| `/offers/{id}`|   GET    | returns response with status 200 (OK) along with the offer  if the offer exists, otherwise 404 (NOT FOUND)|
+| resource             | method   |description                       |
+|:---------------------|:---------|:---------------------------------|
+| `/offers`            |   POST   | returns response with status 201 (CREATED) and Location header of the entity created (can't be fetched) |
+| `/offers/{id}`       |   GET    | returns response with status 200 (OK) along with the offer  if the offer exists, otherwise 404 (NOT FOUND)|
+| `/offers/{id}/cancel`|   POST   | returns response with status 200 (OK), otherwise 404 (NOT FOUND)|
 
 
 #### POST /offers Request example
@@ -58,7 +59,8 @@ The API is RESTful and content will be in JSON
  "currency":"GBP",
  "amountInPence":12345,
  "startDate":"2018-04-1 22:10",
- "endDate":"2018-05-1 22:10"
+ "endDate":"2018-05-1 22:10",
+ "status":"CREATED"
 }
 ```
 
@@ -72,7 +74,7 @@ The API is RESTful and content will be in JSON
  "amountInPence":12345,
  "startDate":"2018-04-1 22:10",
  "endDate":"2018-05-1 22:10",
- "status":"CREATED"
+ "status":"EXPIRED"
 }
 ```
 

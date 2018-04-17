@@ -95,6 +95,32 @@ public class OfferControllerIntegrationTest {
     }
 
     @Test
+    public void cancelOffer_shouldReturnOk_whenAnOfferExists() {
+
+        Offer existingSavedOffer = offerRepository.save(aValidOffer()
+                .withDescription("Greatest offer")
+                .withStartDate("2018-04-15T06:24:00Z")
+                .withEndDate("2018-04-16T06:24:00Z").build());
+
+        given()
+                .port(port)
+                .post("/offers/" + existingSavedOffer.getId() + "/cancel")
+            .then()
+                .statusCode(is(200));
+    }
+
+    @Test
+    public void cancelOffer_shouldReturnNotFound_whenAnOfferDoesNotExist() {
+
+        given()
+                .port(port)
+                .header("Accept", "application/json")
+                .post("/offers/555/cancel")
+                .then()
+                .statusCode(is(404));
+    }
+
+    @Test
     public void retrieveOffer_shouldFailAsNotFound_whenAnOfferDoesNotExist() {
 
         long nonExistingOfferId = 999;

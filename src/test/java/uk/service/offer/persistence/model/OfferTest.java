@@ -28,4 +28,16 @@ public class OfferTest {
         offer.onPostLoad();
         assertThat(offer.getStatus(), is("EXPIRED"));
     }
+
+    @Test
+    public void cancel_shouldSetOfferAsCancelled() {
+
+        Offer offer = OfferFixture.aValidOffer().build();
+
+        assertThat(offer.isCancelled(), is(false));
+
+        offer.cancel();
+
+        assertThat(offer.isCancelled(), is(true));
+    }
 }

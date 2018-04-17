@@ -19,6 +19,7 @@ public class Offer {
     private Instant startDate;
     private Instant endDate;
     private String status;
+    private boolean isCancelled = false;
 
     public Offer() {
         // JPA required
@@ -60,6 +61,18 @@ public class Offer {
         return status;
     }
 
+    public boolean isCancelled() {
+        return isCancelled;
+    }
+
+    public void setCancelled(boolean cancelled) {
+        isCancelled = cancelled;
+    }
+
+    public void cancel() {
+        this.setCancelled(true);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -81,7 +94,9 @@ public class Offer {
 
     @PostLoad
     void onPostLoad() {
-        if (Instant.now().isAfter(this.endDate)) {
+        if (this.isCancelled) {
+            this.status = "CANCELLED";
+        } else if (Instant.now().isAfter(this.endDate)) {
             this.status = "EXPIRED";
         } else {
             this.status = "CREATED";

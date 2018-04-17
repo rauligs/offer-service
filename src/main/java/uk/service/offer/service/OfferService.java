@@ -6,6 +6,8 @@ import uk.service.offer.exception.OfferNotFoundException;
 import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
 
+import javax.transaction.Transactional;
+
 @Service
 public class OfferService {
 
@@ -17,8 +19,14 @@ public class OfferService {
         return savedOffer.getId();
     }
 
-    public Offer getOfferById(Long offerId) {
+    public Offer getOfferById(long offerId) {
         return offerRepository.findById(offerId)
                 .orElseThrow(OfferNotFoundException::new);
+    }
+
+    @Transactional
+    public void cancelOffer(long offerId) {
+        Offer offer = getOfferById(offerId);
+        offer.cancel();
     }
 }

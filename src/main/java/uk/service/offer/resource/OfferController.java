@@ -38,4 +38,10 @@ public class OfferController {
         responseDTO.setStatus(offer.getStatus());
         return ResponseEntity.ok(responseDTO);
     }
+
+    @RequestMapping(value = "/offers/{id}/cancel", method = RequestMethod.POST)
+    public ResponseEntity cancelOffer(@PathVariable long id) {
+        offerService.cancelOffer(id);
+        return ResponseEntity.ok().build();
+    }
 }

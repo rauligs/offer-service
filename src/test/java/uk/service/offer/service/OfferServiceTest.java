@@ -16,6 +16,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.service.offer.fixture.OfferFixture.*;
 
@@ -76,5 +77,19 @@ public class OfferServiceTest {
                 .thenReturn(Optional.empty());
 
         offerService.getOfferById(id);
+    }
+
+    @Test
+    public void cancelOffer_shouldCancel() {
+
+        Offer existingOffer = mock(Offer.class);
+        long id = 321L;
+
+        when(mockOfferRepository.findById(id))
+                .thenReturn(Optional.of(existingOffer));
+
+        offerService.cancelOffer(id);
+
+       verify(existingOffer).cancel();
     }
 }
