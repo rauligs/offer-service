@@ -36,4 +36,18 @@ The API is RESTful and content will be in JSON
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
 | `/offers`     |   POST   | returns response with status 201 (CREATED) and Location header of the entity created (can't be fetched) |
-| `/offers/{id}`|   GET    | returns response with status 200 (OK)  if the offer exists, otherwise 404 (NOT FOUND)|
+| `/offers/{id}`|   GET    | returns response with status 200 (OK) along with the offer  if the offer exists, otherwise 404 (NOT FOUND)|
+
+#### POST /offers Request example
+```json
+{
+ "description" : "great offe for great people"
+}
+```
+
+#### GET /offers/{id} Response example
+```json
+{
+ "description" : "buy 2 get 1!"
+}
+```

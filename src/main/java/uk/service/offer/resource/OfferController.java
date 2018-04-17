@@ -3,6 +3,7 @@ package uk.service.offer.resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +20,12 @@ public class OfferController {
     private OfferRepository offerRepository;
 
     @RequestMapping(value = "/offers", method = RequestMethod.POST)
-    public ResponseEntity createOffer() {
+    public ResponseEntity createOffer(@RequestBody OfferDTO offerDTO) {
 
-        Offer savedOffer = offerRepository.save(new Offer());
+        Offer offer = new Offer();
+        offer.setDescription(offerDTO.getDescription());
+
+        Offer savedOffer = offerRepository.save(offer);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
@@ -33,7 +37,7 @@ public class OfferController {
     @RequestMapping(value = "/offers/{id}", method = RequestMethod.GET)
     public ResponseEntity getOffer(@PathVariable long id) {
         return offerRepository.findById(id)
-                .map(offer -> ResponseEntity.ok().build())
+                .map(offer -> ResponseEntity.ok(new OfferDTO(offer.getDescription())))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

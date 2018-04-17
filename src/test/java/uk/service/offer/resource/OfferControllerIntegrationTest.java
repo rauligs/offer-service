@@ -44,14 +44,17 @@ public class OfferControllerIntegrationTest {
     @Test
     public void retrieveOffer_shouldSucceed_whenAnOfferExists_withTheGivenId() {
 
-        Offer existingOffer = offerRepository.save(new Offer());
+        Offer offer = new Offer();
+        offer.setDescription("Greatest offer");
+        Offer existingSavedOffer = offerRepository.save(offer);
 
         given()
                 .port(port)
                 .header("Accept", "application/json")
-                .get("/offers/" + existingOffer.getId())
+                .get("/offers/" + existingSavedOffer.getId())
             .then()
-                .statusCode(is(200));
+                .statusCode(is(200))
+                .body("description", is("Greatest offer"));
     }
 
     @Test

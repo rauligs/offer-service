@@ -11,8 +11,8 @@ import uk.service.offer.DatabaseConfig;
 import uk.service.offer.persistence.model.Offer;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
@@ -44,9 +44,17 @@ public class OfferRepositoryInMemoryDBTest {
         // I would create different way to query the state of the database
         // so repository tests would be tested in isolation
 
-        Offer foundOffer = offerRepository.getOne(savedOffer.getId());
+        Optional<Offer> foundOffer = offerRepository.findById(savedOffer.getId());
 
-        assertThat(foundOffer, is(notNullValue()));
-        assertThat(foundOffer.getId(), is(savedOffer.getId()));
+        assertThat(foundOffer.isPresent(), is(true));
+        assertThat(foundOffer.get().getId(), is(savedOffer.getId()));
+    }
+
+    @Test
+    public void saveOffer_shouldReturnEmpty_ifNotFound() {
+
+        Optional<Offer> offer = offerRepository.findById(999L);
+
+        assertThat(offer.isPresent(), is(false));
     }
 }

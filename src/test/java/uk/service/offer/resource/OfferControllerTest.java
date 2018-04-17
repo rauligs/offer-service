@@ -7,15 +7,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBodyReturnValueHandler;
 import uk.service.offer.persistence.dao.OfferRepository;
 import uk.service.offer.persistence.model.Offer;
 
 import java.util.Optional;
 
+import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,12 +52,14 @@ public class OfferControllerTest {
         long id = 123L;
         Offer existingOffer = new Offer();
         existingOffer.setId(id);
+        existingOffer.setDescription("My description");
 
         when(mockOfferRepository.findById(id))
                 .thenReturn(Optional.of(existingOffer));
 
         this.mockMvc.perform(get("/offers/123"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"description\":\"My description\"}"));
     }
 
     @Test
