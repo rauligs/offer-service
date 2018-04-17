@@ -22,7 +22,7 @@ public class OfferController {
     @RequestMapping(value = "/offers", method = RequestMethod.POST)
     public ResponseEntity createOffer(@RequestBody OfferDTO offerDTO) {
 
-        Long offerId = offerService.create(new Offer(offerDTO.getDescription(), offerDTO.getCurrency(), offerDTO.getAmountInPence()));
+        Long offerId = offerService.create(new Offer(offerDTO.getDescription(), offerDTO.getCurrency(), offerDTO.getAmountInPence(), offerDTO.getStartDate(), offerDTO.getEndDate()));
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}")
@@ -34,6 +34,6 @@ public class OfferController {
     @RequestMapping(value = "/offers/{id}", method = RequestMethod.GET)
     public ResponseEntity getOffer(@PathVariable long id) {
         Offer offer = offerService.getOfferById(id);
-        return ResponseEntity.ok(new OfferDTO(offer.getDescription(), offer.getCurrency(), offer.getAmountInPence()));
+        return ResponseEntity.ok(new OfferDTO(offer.getDescription(), offer.getCurrency(), offer.getAmountInPence(), offer.getStartDate(), offer.getEndDate()));
     }
 }

@@ -28,26 +28,50 @@ Upon successful build, the jar will be assembled in `build/libs/offer-service-re
 Run assembled application artifact: `java -jar build/libs/offer-service-rest-api-0.1.0.jar`
 Run the app without building the jar: `./gradlew bootRun`
 
+## Offer
+
 ## API overview
 The API is RESTful and content will be in JSON
 
 ### Resource components
+
+* Offers: An offer is a proposal to sell a specific product or service under specific conditions. Fields
+** *description:* Friendly description
+** *currency:* [Currency code](https://en.wikipedia.org/wiki/ISO_4217)
+** *amountInPence:* Amount in pence of the given currency
+** *startDate:* Start date of the offer
+** *endDate:* End date of the offer
 
 | resource      | method   |description                       |
 |:--------------|:---------|:---------------------------------|
 | `/offers`     |   POST   | returns response with status 201 (CREATED) and Location header of the entity created (can't be fetched) |
 | `/offers/{id}`|   GET    | returns response with status 200 (OK) along with the offer  if the offer exists, otherwise 404 (NOT FOUND)|
 
+
 #### POST /offers Request example
 ```json
 {
- "description" : "great offe for great people"
+ "description":"great offe for great people"
+ "currency":"GBP",
+ "amountInPence":12345,
+ "startDate":"2018-04-1 22:10",
+ "endDate":"2018-05-1 22:10"
 }
 ```
+
+
 
 #### GET /offers/{id} Response example
 ```json
 {
- "description" : "buy 2 get 1!"
+ "description" : "buy 2 get 1!",
+ "currency":"GBP",
+ "amountInPence":12345,
+ "startDate":"2018-04-1 22:10",
+ "endDate":"2018-05-1 22:10"
+
 }
 ```
+
+### Date formatting
+_Date format is 'yyyy-MM-dd HH:mm' in UTC_

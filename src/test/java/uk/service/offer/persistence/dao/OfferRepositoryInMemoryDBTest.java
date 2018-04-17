@@ -8,6 +8,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 import uk.service.offer.DatabaseConfig;
+import uk.service.offer.fixture.OfferFixture;
 import uk.service.offer.persistence.model.Offer;
 
 import javax.annotation.Resource;
@@ -37,7 +38,7 @@ public class OfferRepositoryInMemoryDBTest {
     @Test
     public void saveOffer_whenIsSaved_itShouldBeFound() {
 
-        Offer offer = new Offer("Description", "GBP", 123L);
+        Offer offer = OfferFixture.aValidOffer().build();
 
         Offer savedOffer = offerRepository.save(offer);
 

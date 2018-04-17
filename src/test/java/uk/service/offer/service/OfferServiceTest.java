@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static uk.service.offer.fixture.OfferFixture.*;
 
 @RunWith(SpringRunner.class)
 public class OfferServiceTest {
@@ -38,7 +39,7 @@ public class OfferServiceTest {
     @Test
     public void createAnOffer_shouldSaveANewOffer_returningExpectedLocation() {
 
-        Offer offerToCreate = new Offer("Interesting offer", "GBP", 66L);
+        Offer offerToCreate = aValidOffer().build();
         Long savedOfferId = 456L;
 
         Offer savedOffer = mock(Offer.class);
@@ -56,7 +57,7 @@ public class OfferServiceTest {
     public void getAnOffer_shouldReturnOk() {
 
         long id = 123L;
-        Offer existingOffer = new Offer("My description", "GBP", 99L);
+        Offer existingOffer = aValidOffer().build();
 
         when(mockOfferRepository.findById(id))
                 .thenReturn(Optional.of(existingOffer));

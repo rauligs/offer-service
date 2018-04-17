@@ -12,6 +12,9 @@ import uk.service.offer.exception.OfferNotFoundException;
 import uk.service.offer.persistence.model.Offer;
 import uk.service.offer.service.OfferService;
 
+import java.time.Instant;
+import java.util.Date;
+
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -19,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.service.offer.fixture.OfferFixture.aValidOffer;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(OfferController.class)
@@ -35,10 +39,10 @@ public class OfferControllerTest {
 
         Long savedOfferId = 1L;
         when(mockOfferService.create(argThat(offer ->
-                    offer.getId() == null &&
-                    "wow".equals(offer.getDescription()) &&
-                    "GBP".equals(offer.getCurrency()) &&
-                    offer.getAmountInPence() == 12345L)))
+                offer.getId() == null &&
+                        "wow".equals(offer.getDescription()) &&
+                        "GBP".equals(offer.getCurrency()) &&
+                        offer.getAmountInPence() == 12345L)))
                 .thenReturn(savedOfferId);
 
         this.mockMvc.perform(post("/offers")
@@ -56,7 +60,13 @@ public class OfferControllerTest {
     public void getAnOffer_shouldReturnOk_withContentSetInOffer() throws Exception {
 
         long id = 123L;
-        Offer existingOffer = new Offer("My description", "GBP", 1L);
+        Offer existingOffer = aValidOffer()
+                .withDescription("My description")
+                .withCurrency("GBP")
+                .withAmountInPence(1L)
+                .withStartDate(Date.from(Instant.parse("2018-04-01T06:24:00Z")))
+                .withEndDate(Date.from(Instant.parse("2018-04-18T06:24:55Z")))
+                .build();
 
         when(mockOfferService.getOfferById(id))
                 .thenReturn(existingOffer);
@@ -66,7 +76,9 @@ public class OfferControllerTest {
                 .andExpect(content().json("{" +
                         "\"description\":\"My description\"," +
                         "\"currency\":\"GBP\"," +
-                        "\"amountInPence\":1" +
+                        "\"amountInPence\":1," +
+                        "\"startDate\":\"2018-04-01 06:24\"," +
+                        "\"endDate\":\"2018-04-18 06:24\"" +
                         "}"));
     }
 

@@ -3,6 +3,7 @@ package uk.service.offer.persistence.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -14,15 +15,19 @@ public class Offer {
     private String description;
     private String currency;
     private long amountInPence;
+    private Date startDate;
+    private Date endDate;
 
     public Offer() {
         // JPA required
     }
 
-    public Offer(String description, String currency, long amountInPence) {
+    public Offer(String description, String currency, long amountInPence, Date startDate, Date endDate) {
         this.description = description;
         this.currency = currency;
         this.amountInPence = amountInPence;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     public Long getId() {
@@ -41,6 +46,14 @@ public class Offer {
         return amountInPence;
     }
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,11 +61,13 @@ public class Offer {
         Offer offer = (Offer) o;
         return amountInPence == offer.amountInPence &&
                 Objects.equals(description, offer.description) &&
-                Objects.equals(currency, offer.currency);
+                Objects.equals(currency, offer.currency) &&
+                Objects.equals(startDate, offer.startDate) &&
+                Objects.equals(endDate, offer.endDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(description, currency, amountInPence);
+        return Objects.hash(description, currency, amountInPence, startDate, endDate);
     }
 }
