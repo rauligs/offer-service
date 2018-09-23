@@ -55,15 +55,6 @@ class TestConfig {
     private Environment env;
 
     @Bean
-    DriverManagerDataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(env.getProperty("jdbc.driverClassName"));
-        dataSource.setUrl(env.getProperty("jdbc.url"));
-        dataSource.setPassword(env.getProperty("jdbc.pass"));
-        return dataSource;
-    }
-
-    @Bean
     JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
