@@ -1,0 +1,45 @@
+{
+  "consumer": {
+    "name": "OfferClient"
+  },
+  "provider": {
+    "name": "OfferService"
+  },
+  "interactions": [
+    {
+      "description": "a request for an offer",
+      "providerState": "I have an offer previously created",
+      "request": {
+        "method": "GET",
+        "path": "/offers/5555",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "description": "great offer for great people",
+          "currency": "GBP",
+          "amountInPence": 12345,
+          "startDate": "2018-09-01T22:10:00Z",
+          "endDate": "2018-10-01T22:10:00Z",
+          "status": "CREATED"
+        },
+        "matchingRules": {
+          "$.body.description": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
